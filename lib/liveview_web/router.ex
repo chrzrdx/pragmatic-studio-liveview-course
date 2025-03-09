@@ -19,7 +19,7 @@ defmodule LiveviewWeb.Router do
 
     get "/", PageController, :home
 
-    live "/light", LightController, :index
+    live "/light", LightLive
   end
 
   # Other scopes may use custom stacks.

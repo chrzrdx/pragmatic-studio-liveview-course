@@ -1,4 +1,4 @@
-defmodule LiveviewWeb.LightController do
+defmodule LiveviewWeb.LightLive do
   use LiveviewWeb, :live_view
 
   def mount(_params, _session, socket) do
@@ -28,7 +28,7 @@ defmodule LiveviewWeb.LightController do
   def render(assigns) do
     ~H"""
     <div class="space-y-12">
-      <h1 class="text-4xl font-extrabold text-center">Front porch light</h1>
+      <h1 class="text-5xl font-extrabold text-center">Front porch light</h1>
 
       <div class="space-y-8">
         <.meter brightness={@brightness} />
