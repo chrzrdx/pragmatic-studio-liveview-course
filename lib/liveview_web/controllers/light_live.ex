@@ -45,6 +45,8 @@ defmodule LiveviewWeb.LightLive do
     """
   end
 
+  attr :brightness, :integer, required: true
+
   defp meter(assigns) do
     ~H"""
     <div class="h-16 rounded-xl bg-zinc-200 overflow-clip">
@@ -52,17 +54,20 @@ defmodule LiveviewWeb.LightLive do
         class="h-full text-2xl font-bold bg-yellow-400 rounded-xl flex items-center transition-width duration-300 ease-out justify-center"
         style={"width: #{@brightness}%"}
       >
-        <span class={@brightness < 10 && "pl-12"}>{@brightness}%</span>
+        <span class={if(@brightness < 10, do: "pl-12", else: "")}>{@brightness}%</span>
       </div>
     </div>
     """
   end
 
+  attr :icon, :string, required: true
+  attr :rest, :global
+
   defp action(assigns) do
     ~H"""
     <button
       class="p-3 size-16 border-2 border-zinc-500 rounded-xl hover:bg-zinc-50 cursor-pointer"
-      {assigns_to_attributes(assigns, [:icon])}
+      {@rest}
     >
       <img src={"/images/#{@icon}.svg"} alt={String.capitalize(@icon)} />
     </button>
