@@ -30,7 +30,7 @@ defmodule LiveviewWeb.LightController do
     <div class="space-y-12">
       <h1 class="text-4xl font-extrabold text-center">Front porch light</h1>
 
-      <div class="flex flex-col gap-4">
+      <div class="space-y-8">
         <.meter brightness={@brightness} />
 
         <div class="flex gap-4 justify-center">
