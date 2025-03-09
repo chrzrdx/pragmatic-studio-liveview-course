@@ -9,12 +9,16 @@ defmodule LiveviewWeb.LightController do
     {:noreply, assign(socket, brightness: 0)}
   end
 
-  def handle_event("up", _params, socket) do
-    {:noreply, update(socket, :brightness, &min(&1 + 10, 100))}
-  end
-
   def handle_event("down", _params, socket) do
     {:noreply, update(socket, :brightness, &max(&1 - 10, 0))}
+  end
+
+  def handle_event("random", _params, socket) do
+    {:noreply, assign(socket, brightness: Enum.random(0..100))}
+  end
+
+  def handle_event("up", _params, socket) do
+    {:noreply, update(socket, :brightness, &min(&1 + 10, 100))}
   end
 
   def handle_event("on", _params, socket) do
@@ -30,10 +34,11 @@ defmodule LiveviewWeb.LightController do
         <.meter brightness={@brightness} />
 
         <div class="flex gap-4 justify-center">
-          <.light_button event="off" img_src="/images/light-off.svg" />
-          <.light_button event="down" img_src="/images/down.svg" />
-          <.light_button event="up" img_src="/images/up.svg" />
-          <.light_button event="on" img_src="/images/light-on.svg" />
+          <.action phx-click="off" icon="light-off" />
+          <.action phx-click="down" icon="down" />
+          <.action phx-click="random" icon="fire" />
+          <.action phx-click="up" icon="up" />
+          <.action phx-click="on" icon="light-on" />
         </div>
       </div>
     </div>
@@ -44,7 +49,7 @@ defmodule LiveviewWeb.LightController do
     ~H"""
     <div class="h-16 rounded-xl bg-zinc-200 overflow-clip">
       <div
-        class="h-full text-2xl font-bold bg-yellow-400 rounded-xl flex items-center transition-width duration-300 ease-in-out justify-center"
+        class="h-full text-2xl font-bold bg-yellow-400 rounded-xl flex items-center transition-width duration-300 ease-out justify-center"
         style={"width: #{@brightness}%"}
       >
         <span class={@brightness < 10 && "pl-12"}>{@brightness}%</span>
@@ -53,13 +58,13 @@ defmodule LiveviewWeb.LightController do
     """
   end
 
-  defp light_button(assigns) do
+  defp action(assigns) do
     ~H"""
     <button
       class="p-3 size-16 border-2 border-zinc-500 rounded-xl hover:bg-zinc-50 cursor-pointer"
-      phx-click={@event}
+      {assigns_to_attributes(assigns, [:icon])}
     >
-      <img src={@img_src} alt={String.capitalize(@event)} />
+      <img src={"/images/#{@icon}.svg"} alt={String.capitalize(@icon)} />
     </button>
     """
   end
