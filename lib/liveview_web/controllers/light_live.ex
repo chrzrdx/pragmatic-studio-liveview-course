@@ -6,7 +6,7 @@ defmodule LiveviewWeb.LightLive do
   end
 
   def handle_event("off", _params, socket) do
-    {:noreply, assign(socket, brightness: 0)}
+    {:noreply, update(socket, :brightness, fn _ -> 0 end)}
   end
 
   def handle_event("down", _params, socket) do
@@ -14,7 +14,7 @@ defmodule LiveviewWeb.LightLive do
   end
 
   def handle_event("random", _params, socket) do
-    {:noreply, assign(socket, brightness: Enum.random(0..100))}
+    {:noreply, update(socket, :brightness, fn _ -> Enum.random(0..100) end)}
   end
 
   def handle_event("up", _params, socket) do
@@ -22,7 +22,7 @@ defmodule LiveviewWeb.LightLive do
   end
 
   def handle_event("on", _params, socket) do
-    {:noreply, assign(socket, brightness: 100)}
+    {:noreply, update(socket, :brightness, fn _ -> 100 end)}
   end
 
   def render(assigns) do
@@ -66,7 +66,7 @@ defmodule LiveviewWeb.LightLive do
   defp action(assigns) do
     ~H"""
     <button
-      class="p-3 size-16 border-2 border-zinc-500 rounded-xl hover:bg-zinc-50 cursor-pointer"
+      class="p-3 bg-white transition-colors size-16 border-2 border-zinc-500 rounded-xl hover:bg-zinc-100 cursor-pointer"
       {@rest}
     >
       <img src={"/images/#{@icon}.svg"} alt={String.capitalize(@icon)} />
