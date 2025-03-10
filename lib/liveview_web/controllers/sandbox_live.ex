@@ -55,9 +55,9 @@ defmodule LiveviewWeb.SandboxLive do
 
   def render(assigns) do
     ~H"""
-    <div class="space-y-12">
+    <div class="space-y-12 max-w-2xl mx-auto">
       <h1 class="text-5xl font-extrabold text-center">Build a sandbox</h1>
-      <div class="border border-zinc-300 bg-white p-8 shadow rounded-xl max-w-2xl flex flex-col gap-8 items-center">
+      <div class="border border-zinc-300 bg-white p-8 shadow rounded-xl flex flex-col gap-8 items-center">
         <form phx-change="update" phx-submit="get-quote" id="sandbox">
           <div class="flex gap-8">
             <.dimension label="Length" unit="feet" id="length" name="length" value={@length} />

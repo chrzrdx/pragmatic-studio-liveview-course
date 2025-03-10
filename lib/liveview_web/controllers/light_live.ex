@@ -44,7 +44,7 @@ defmodule LiveviewWeb.LightLive do
 
   def render(assigns) do
     ~H"""
-    <div class="space-y-12">
+    <div class="space-y-12 max-w-2xl mx-auto">
       <h1 class="text-5xl font-extrabold text-center">Front porch light</h1>
 
       <div class="space-y-8">
