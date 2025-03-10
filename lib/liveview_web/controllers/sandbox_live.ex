@@ -3,8 +3,8 @@ defmodule LiveviewWeb.SandboxLive do
 
   alias Liveview.Sandbox
 
-  def mount(_params, _session, socket) do
-    {l, w, h} = {"0", "0", "0"}
+  def mount(params, _session, socket) do
+    {l, w, h} = validate_params(params)
 
     {
       :ok,
@@ -83,24 +83,25 @@ defmodule LiveviewWeb.SandboxLive do
 
   attr :id, :string, required: true
   attr :name, :string, required: true
+  attr :value, :string, required: true
   attr :label, :string, required: true
   attr :unit, :string, required: true
-  attr :rest, :global, include: ~w(name value form)
+  attr :rest, :global
 
   defp dimension(assigns) do
     ~H"""
     <div class="space-y-2">
       <label class="block text-center text-xl font-bold" for={@id}>{@label}</label>
-      <div class="flex items-center gap-2 border-2 border-zinc-200 border rounded py-3 px-4 text-lg focus-within:border-zinc-600">
+      <div class="flex items-center gap-2 border-2 border-zinc-200 rounded-lg py-3 px-4 text-lg focus-within:border-zinc-600">
         <input
           class="w-full outline-none"
+          type="number"
           min="0"
           max="99999"
-          type="number"
           autocomplete="off"
           id={@id}
           name={@name}
-          {@rest}
+          value={@value}
         />
         <span class="text-zinc-500">{@unit}</span>
       </div>
@@ -119,7 +120,11 @@ defmodule LiveviewWeb.SandboxLive do
   end
 
   # Validates and extracts length, width, and height from params
-  defp validate_params(%{"length" => l, "width" => w, "height" => h}) do
+  defp validate_params(params) do
+    l = Map.get(params, "length", "0")
+    w = Map.get(params, "width", "0")
+    h = Map.get(params, "height", "0")
+
     {
       validate_input(l),
       validate_input(w),
