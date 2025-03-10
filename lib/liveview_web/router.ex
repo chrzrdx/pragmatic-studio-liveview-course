@@ -19,9 +19,10 @@ defmodule LiveviewWeb.Router do
 
     get "/", PageController, :home
 
+    live "/bingo", BingoLive
     live "/light", LightLive
-    live "/sandbox", SandboxLive
     live "/sales", SalesLive
+    live "/sandbox", SandboxLive
   end
 
   # Other scopes may use custom stacks.
