@@ -2,7 +2,9 @@ defmodule LiveviewWeb.BingoLive do
   use LiveviewWeb, :live_view
 
   def mount(_params, _session, socket) do
-    :timer.send_interval(3000, :tick)
+    if connected?(socket) do
+      :timer.send_interval(3000, :tick)
+    end
 
     socket =
       assign(socket,

@@ -3,7 +3,10 @@ defmodule LiveviewWeb.SalesLive do
   alias Liveview.Sales
 
   def mount(_params, _session, socket) do
-    :timer.send_interval(1000, :tick)
+    if connected?(socket) do
+      :timer.send_interval(1000, :tick)
+    end
+
     {:ok, fetch_data(socket)}
   end
 
