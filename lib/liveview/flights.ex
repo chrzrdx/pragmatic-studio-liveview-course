@@ -1,5 +1,7 @@
 defmodule Liveview.Flights do
   def search_by_airport(airport) do
+    Process.sleep(1000)
+
     airport = airport |> String.upcase() |> String.trim()
 
     case airport do
