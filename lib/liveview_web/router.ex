@@ -19,10 +19,10 @@ defmodule LiveviewWeb.Router do
 
     get "/", PageController, :home
 
-    live "/bingo", BingoLive
-    live "/light", LightLive
-    live "/sales", SalesLive
-    live "/sandbox", SandboxLive
+    live "/bingo", BingoLive, metadata: %{tags: ["External Events"]}
+    live "/light", LightLive, metadata: %{tags: ["Form"]}
+    live "/sales", SalesLive, metadata: %{tags: ["External Events"]}
+    live "/sandbox", SandboxLive, metadata: %{tags: ["Dynamic Form"]}
   end
 
   # Other scopes may use custom stacks.
