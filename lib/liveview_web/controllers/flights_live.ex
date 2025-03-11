@@ -14,8 +14,8 @@ defmodule LiveviewWeb.FlightsLive do
   end
 
   @impl true
-  def handle_event("search", %{"airport" => airport}, socket) do
-    send(self(), {:search, airport})
+  def handle_event("search_flights", %{"airport" => airport}, socket) do
+    send(self(), {:search_flights, airport})
 
     {:noreply,
      assign(
@@ -27,7 +27,7 @@ defmodule LiveviewWeb.FlightsLive do
   end
 
   @impl true
-  def handle_info({:search, airport}, socket) do
+  def handle_info({:search_flights, airport}, socket) do
     {:noreply,
      assign(
        socket,
@@ -43,7 +43,7 @@ defmodule LiveviewWeb.FlightsLive do
     <div class="space-y-12 max-w-2xl mx-auto">
       <h1 class="text-5xl font-extrabold text-center">Find a Flight</h1>
 
-      <form class="max-w-96 mx-auto text-xl" phx-submit="search">
+      <form class="max-w-96 mx-auto text-xl" phx-submit="search_flights">
         <div class="flex gap-4 py-2 px-4 border-2 border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
           <label for="airport" class="sr-only">Search by airport</label>
           <input
@@ -65,6 +65,8 @@ defmodule LiveviewWeb.FlightsLive do
 
       <ul
         :if={length(@flights) > 0 or @loading}
+        phx-remove={JS.transition({"ease-out duration-300", "opacity-100", "opacity-0"})}
+        phx-mounted={JS.transition({"ease-out duration-300", "opacity-0", "opacity-100"})}
         class="rounded bg-white overflow-hidden border border-zinc-300 shadow-lg divide-y divide-zinc-300 relative min-h-22"
       >
         <li :if={@loading} class="grid place-content-center py-4 px-6 inset-0 bg-white/80 absolute">
