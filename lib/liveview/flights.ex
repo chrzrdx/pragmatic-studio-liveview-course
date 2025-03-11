@@ -1,5 +1,5 @@
 defmodule Liveview.Flights do
-  def search_by_airport(airport) do
+  def search_by_airport(airport) when is_binary(airport) do
     Process.sleep(1000)
 
     airport = airport |> String.upcase() |> String.trim()
@@ -12,15 +12,6 @@ defmodule Liveview.Flights do
         list_flights()
         |> Enum.filter(&(&1.origin == airport || &1.destination == airport))
     end
-  end
-
-  def suggest_airport(prefix) do
-    prefix = String.upcase(prefix)
-
-    list_flights()
-    |> Enum.flat_map(fn flight -> [flight.origin, flight.destination] end)
-    |> Enum.uniq()
-    |> Enum.filter(&String.starts_with?(&1, prefix))
   end
 
   def list_flights do
