@@ -58,9 +58,9 @@
         :if={not String.starts_with?(route.path, "/dev") and route.path != "/"}
         class="contents"
       >
-          <span class="font-mono text-xs px-2 py-1 rounded bg-brand/10 text-brand">
-            {route.verb}
-          </span>
+        <span class="font-mono text-xs px-2 py-1 rounded bg-brand/10 text-brand">
+          {route.verb}
+        </span>
         <a href={route.path}>
           <span class="font-medium hover:underline hover:text-indigo-500 mr-2">{route.path}</span>
         </a>

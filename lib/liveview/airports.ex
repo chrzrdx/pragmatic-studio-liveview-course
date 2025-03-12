@@ -1,5 +1,7 @@
 defmodule Liveview.Airports do
   def suggest(prefix) when is_binary(prefix) do
+    Process.sleep(500)
+
     prefix = prefix |> String.trim() |> String.upcase()
 
     case prefix do
@@ -9,6 +11,7 @@ defmodule Liveview.Airports do
       _ ->
         list_airports()
         |> Map.filter(fn {k, _} -> String.starts_with?(k, prefix) end)
+        |> Map.to_list()
     end
   end
 

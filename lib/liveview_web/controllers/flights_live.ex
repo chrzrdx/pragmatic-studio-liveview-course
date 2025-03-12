@@ -8,8 +8,10 @@ defmodule LiveviewWeb.FlightsLive do
      assign(
        socket,
        airport: "",
+       airports: [],
        flights: [],
-       loading: false
+       loading_flights: false,
+       loading_airports: false
      )}
   end
 
@@ -21,8 +23,30 @@ defmodule LiveviewWeb.FlightsLive do
      assign(
        socket,
        airport: airport,
-       flights: socket.assigns.flights,
-       loading: true
+       airports: [],
+       loading_flights: true,
+       loading_airports: false
+     )}
+  end
+
+  @impl true
+  def handle_event("search_airports", %{"airport" => airport}, socket) do
+    send(self(), {:search_airports, airport})
+
+    {:noreply, assign(socket, loading_airports: true)}
+  end
+
+  @impl true
+  def handle_event("select_airport", %{"code" => code}, socket) do
+    send(self(), {:search_flights, code})
+
+    {:noreply,
+     assign(
+       socket,
+       airport: code,
+       airports: [],
+       loading_flights: true,
+       loading_airports: false
      )}
   end
 
@@ -33,7 +57,16 @@ defmodule LiveviewWeb.FlightsLive do
        socket,
        airport: airport,
        flights: Flights.search_by_airport(airport),
-       loading: false
+       loading_flights: false
+     )}
+  end
+
+  @impl true
+  def handle_info({:search_airports, airport}, socket) do
+    {:noreply,
+     assign(socket,
+       airports: Liveview.Airports.suggest(airport),
+       loading_airports: false
      )}
   end
 
@@ -43,8 +76,8 @@ defmodule LiveviewWeb.FlightsLive do
     <div class="space-y-12 max-w-2xl mx-auto">
       <h1 class="text-5xl font-extrabold text-center">Find a Flight</h1>
 
-      <form class="max-w-96 mx-auto text-xl" phx-submit="search_flights">
-        <div class="flex gap-4 py-2 px-4 border-2 border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+      <form class="max-w-96 mx-auto text-xl" phx-submit="search_flights" phx-change="search_airports">
+        <div class="flex gap-4 py-2 px-4 border-2 border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent relative">
           <label for="airport" class="sr-only">Search by airport</label>
           <input
             class="w-full border-none outline-none placeholder:text-gray-400"
@@ -57,19 +90,35 @@ defmodule LiveviewWeb.FlightsLive do
             placeholder="Airport code"
             autocomplete="off"
             autofocus
-            readonly={@loading}
+            readonly={@loading_flights}
+            phx-debounce="300"
           />
-          <button type="submit" disabled={@loading} class="rounded-r-lg cursor-pointer ">🔍</button>
+          <div :if={length(@airports) > 0 and not @loading_flights} class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10">
+            <div :for={{airport_code, airport_name} <- @airports}
+                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                 phx-click="select_airport"
+                 phx-value-code={airport_code}>
+              <div class="text-sm text-indigo-700 font-medium">{airport_code}</div>
+              <div class="text-xs text-zinc-600">{airport_name}</div>
+            </div>
+          </div>
+          <button type="submit" disabled={@loading_flights} class="shrink-0 rounded-r-lg cursor-pointer size-8">
+            <span  :if={not @loading_airports}>🔍</span>
+            <.loader :if={@loading_airports} ></.loader>
+          </button>
         </div>
       </form>
 
       <ul
-        :if={length(@flights) > 0 or @loading}
+        :if={length(@flights) > 0 || @loading_flights}
         phx-remove={JS.transition({"ease-out duration-300", "opacity-100", "opacity-0"})}
         phx-mounted={JS.transition({"ease-out duration-300", "opacity-0", "opacity-100"})}
         class="rounded bg-white overflow-hidden border border-zinc-300 shadow-lg divide-y divide-zinc-300 relative min-h-22"
       >
-        <li :if={@loading} class="grid place-content-center py-4 px-6 inset-0 bg-white/80 absolute">
+        <li
+          :if={@loading_flights}
+          class="grid place-content-center py-4 px-6 inset-0 bg-white/80 absolute"
+        >
           <.loader class="size-16" />
         </li>
         <li
