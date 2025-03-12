@@ -93,18 +93,27 @@ defmodule LiveviewWeb.FlightsLive do
             readonly={@loading_flights}
             phx-debounce="300"
           />
-          <div :if={length(@airports) > 0 and not @loading_flights} class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10">
-            <div :for={{airport_code, airport_name} <- @airports}
-                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                 phx-click="select_airport"
-                 phx-value-code={airport_code}>
+          <div
+            :if={length(@airports) > 0 and not @loading_flights}
+            class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10"
+          >
+            <div
+              :for={{airport_code, airport_name} <- @airports}
+              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              phx-click="select_airport"
+              phx-value-code={airport_code}
+            >
               <div class="text-sm text-indigo-700 font-medium">{airport_code}</div>
               <div class="text-xs text-zinc-600">{airport_name}</div>
             </div>
           </div>
-          <button type="submit" disabled={@loading_flights} class="shrink-0 rounded-r-lg cursor-pointer size-8">
-            <span  :if={not @loading_airports}>🔍</span>
-            <.loader :if={@loading_airports} ></.loader>
+          <button
+            type="submit"
+            disabled={@loading_flights}
+            class="shrink-0 rounded-r-lg cursor-pointer size-8"
+          >
+            <span :if={not @loading_airports}>🔍</span>
+            <.loader :if={@loading_airports}></.loader>
           </button>
         </div>
       </form>
