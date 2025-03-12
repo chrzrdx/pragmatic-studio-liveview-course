@@ -113,7 +113,7 @@ defmodule LiveviewWeb.FlightsLive do
             class="shrink-0 rounded-r-lg cursor-pointer size-8"
           >
             <span :if={not @loading_airports}>🔍</span>
-            <.loader :if={@loading_airports}></.loader>
+            <.loader :if={@loading_airports} />
           </button>
         </div>
       </form>
