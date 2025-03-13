@@ -24,6 +24,7 @@ defmodule LiveviewWeb.Router do
     live "/sales", SalesLive, metadata: %{tags: ["External Events"]}
     live "/sandbox", SandboxLive, metadata: %{tags: ["Dynamic Form"]}
     live "/flights", FlightsLive, metadata: %{tags: ["Search", "Autocomplete"]}
+    live "/boats", BoatsLive, metadata: %{tags: ["Filtering", "Function Components"]}
   end
 
   # Other scopes may use custom stacks.
