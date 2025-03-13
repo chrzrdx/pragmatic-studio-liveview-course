@@ -21,6 +21,35 @@ defmodule Liveview.Boats do
     Repo.all(Boat)
   end
 
+  def list_tags do
+    Repo.all(from boat in Boat, select: fragment("DISTINCT unnest(?)", boat.tags)) |> Enum.sort()
+  end
+
+  def list_prices do
+    Repo.all(from boat in Boat, distinct: true, select: boat.price)
+    |> Enum.sort_by(&String.length/1)
+  end
+
+  def filter_by_price(query, prices) when length(prices) > 0 do
+    from boat in query, where: boat.price in ^prices
+  end
+
+  def filter_by_price(query, _), do: query
+
+  def filter_by_tag(query, tags) when length(tags) > 0 do
+    from boat in query, where: fragment("? && ?", boat.tags, ^tags)
+  end
+
+  def filter_by_tag(query, _), do: query
+
+  def filter_boats(prices, tags) do
+    Boat
+    |> filter_by_price(prices)
+    |> filter_by_tag(tags)
+    |> order_by(:price)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single boat.
 
