@@ -21,7 +21,12 @@ defmodule Liveview.BoatsTest do
     end
 
     test "create_boat/1 with valid data creates a boat" do
-      valid_attrs = %{name: "some name", image: "some image", price: "some price", tags: ["option1", "option2"]}
+      valid_attrs = %{
+        name: "some name",
+        image: "some image",
+        price: "some price",
+        tags: ["option1", "option2"]
+      }
 
       assert {:ok, %Boat{} = boat} = Boats.create_boat(valid_attrs)
       assert boat.name == "some name"
@@ -36,7 +41,13 @@ defmodule Liveview.BoatsTest do
 
     test "update_boat/2 with valid data updates the boat" do
       boat = boat_fixture()
-      update_attrs = %{name: "some updated name", image: "some updated image", price: "some updated price", tags: ["option1"]}
+
+      update_attrs = %{
+        name: "some updated name",
+        image: "some updated image",
+        price: "some updated price",
+        tags: ["option1"]
+      }
 
       assert {:ok, %Boat{} = boat} = Boats.update_boat(boat, update_attrs)
       assert boat.name == "some updated name"
