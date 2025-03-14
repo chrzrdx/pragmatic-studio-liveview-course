@@ -19,10 +19,10 @@ defmodule LiveviewWeb.Router do
 
     get "/", PageController, :home
 
-    live "/bingo", BingoLive, metadata: %{tags: ["External Events"]}
     live "/light", LightLive, metadata: %{tags: ["Form"]}
-    live "/sales", SalesLive, metadata: %{tags: ["External Events"]}
     live "/sandbox", SandboxLive, metadata: %{tags: ["Dynamic Form"]}
+    live "/sales", SalesLive, metadata: %{tags: ["External Events"]}
+    live "/bingo", BingoLive, metadata: %{tags: ["External Events"]}
     live "/flights", FlightsLive, metadata: %{tags: ["Search", "Autocomplete"]}
     live "/boats", BoatsLive, metadata: %{tags: ["Filtering", "Function Components"]}
   end

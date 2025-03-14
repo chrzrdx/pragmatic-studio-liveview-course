@@ -59,7 +59,8 @@ defmodule Liveview.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:money, "~> 1.13"}
+      {:money, "~> 1.13"},
+      {:tailwind_formatter, "~> 0.4.2", only: [:dev, :test], runtime: false}
     ]
   end
 

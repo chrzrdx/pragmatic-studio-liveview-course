@@ -55,11 +55,11 @@ defmodule LiveviewWeb.SandboxLive do
 
   def render(assigns) do
     ~H"""
-    <div class="space-y-12 max-w-2xl mx-auto">
-      <h1 class="text-5xl font-extrabold text-center">Build a sandbox</h1>
-      <div class="border border-zinc-300 bg-white p-8 shadow rounded-xl flex flex-col gap-8 items-center">
+    <div class="mx-auto max-w-2xl space-y-12">
+      <h1 class="text-center text-5xl font-extrabold">Build a sandbox</h1>
+      <div class="flex flex-col items-center gap-8 rounded-xl border border-zinc-300 bg-white p-8 shadow">
         <form phx-change="update" phx-submit="get-quote" id="sandbox">
-          <div class="flex gap-8">
+          <div class="flex flex-wrap gap-8">
             <.dimension label="Length" unit="feet" id="length" name="length" value={@length} />
             <.dimension label="Width" unit="feet" id="width" name="width" value={@width} />
             <.dimension label="Height" unit="inch" id="height" name="height" value={@height} />
@@ -71,7 +71,7 @@ defmodule LiveviewWeb.SandboxLive do
         <button
           form="sandbox"
           type="submit"
-          class="bg-green-500 hover:bg-green-600 text-white px-8 transition-colors py-4 font-bold cursor-pointer text-2xl rounded-md"
+          class="cursor-pointer rounded-md bg-green-500 px-8 py-4 text-2xl font-bold text-white transition-colors hover:bg-green-600"
         >
           Get a quote
         </button>
@@ -90,9 +90,9 @@ defmodule LiveviewWeb.SandboxLive do
 
   defp dimension(assigns) do
     ~H"""
-    <div class="space-y-2">
+    <div class="w-full space-y-2 sm:w-auto">
       <label class="block text-center text-xl font-bold" for={@id}>{@label}</label>
-      <div class="flex items-center gap-2 border-2 border-zinc-200 rounded-lg py-3 px-4 text-lg focus-within:border-zinc-600">
+      <div class="flex items-center gap-2 rounded-lg border-2 border-zinc-200 px-4 py-3 text-lg focus-within:border-zinc-600">
         <input
           class="w-full outline-none"
           type="number"
@@ -113,7 +113,7 @@ defmodule LiveviewWeb.SandboxLive do
 
   defp price_quote(assigns) do
     ~H"""
-    <div class="text-2xl text-green-700 font-bold p-8 border border-dotted border-8">
+    <div class="border-8 border-dotted p-8 text-2xl font-bold text-green-700">
       Get your personal beach day today for only {@price}
     </div>
     """

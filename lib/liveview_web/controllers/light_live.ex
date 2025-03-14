@@ -44,13 +44,13 @@ defmodule LiveviewWeb.LightLive do
 
   def render(assigns) do
     ~H"""
-    <div class="space-y-12 max-w-2xl mx-auto">
-      <h1 class="text-5xl font-extrabold text-center">Front porch light</h1>
+    <div class="mx-auto max-w-2xl space-y-12">
+      <h1 class="text-center text-5xl font-extrabold">Front porch light</h1>
 
       <div class="space-y-8">
         <.meter brightness={@brightness} temperature={@temperature} />
 
-        <div class="flex gap-4 justify-center">
+        <div class="flex justify-center gap-2 sm:gap-4">
           <.action phx-click="off" icon="light-off" />
           <.action phx-click="down" icon="down" />
           <.action phx-click="random" icon="fire" />
@@ -59,7 +59,7 @@ defmodule LiveviewWeb.LightLive do
         </div>
 
         <form phx-change="set_temperature">
-          <ul class="flex gap-4 text-xl justify-center">
+          <ul class="flex justify-center gap-4 text-xl">
             <li :for={temp <- @temperatures}>
               <label class="p-2">
                 <input type="radio" name="temperature" value={temp} checked={@temperature == temp} />
@@ -78,15 +78,15 @@ defmodule LiveviewWeb.LightLive do
 
   defp meter(assigns) do
     ~H"""
-    <div class="h-16 rounded-xl bg-zinc-200 overflow-clip">
+    <div class="h-16 overflow-clip rounded-xl bg-zinc-200">
       <div
         class={[
-          "h-full text-2xl font-bold rounded-xl flex items-center transition-all duration-300 ease-out justify-center",
+          "flex h-full items-center justify-center rounded-xl text-2xl font-bold transition-all duration-300 ease-out",
           meter_color(@temperature)
         ]}
         style={"width: #{@brightness}%"}
       >
-        <span class={if(@brightness < 10, do: "pl-12", else: "")}>{@brightness}%</span>
+        <span class={if @brightness < 10, do: "pl-12", else: ""}>{@brightness}%</span>
       </div>
     </div>
     """
@@ -103,7 +103,7 @@ defmodule LiveviewWeb.LightLive do
   defp action(assigns) do
     ~H"""
     <button
-      class="p-3 bg-white transition-colors size-16 border-2 border-zinc-500 rounded-xl hover:bg-zinc-100 cursor-pointer"
+      class="size-16 cursor-pointer rounded-xl border-2 border-zinc-500 bg-white p-2 transition-colors hover:bg-zinc-100 sm:p-3"
       {@rest}
     >
       <img src={"/images/#{@icon}.svg"} alt={String.capitalize(@icon)} />

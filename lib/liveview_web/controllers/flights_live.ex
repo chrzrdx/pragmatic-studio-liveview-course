@@ -73,11 +73,11 @@ defmodule LiveviewWeb.FlightsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="space-y-12 max-w-2xl mx-auto">
-      <h1 class="text-5xl font-extrabold text-center">Find a Flight</h1>
+    <div class="mx-auto max-w-2xl space-y-12">
+      <h1 class="text-center text-5xl font-extrabold">Find a Flight</h1>
 
       <form class="max-w-96 mx-auto text-xl" phx-submit="search_flights" phx-change="search_airports">
-        <div class="flex gap-4 py-2 px-4 border-2 border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent relative">
+        <div class="relative flex gap-4 rounded-lg border-2 border-gray-300 px-4 py-2 focus-within:border-transparent focus-within:ring-2 focus-within:ring-blue-500">
           <label for="airport" class="sr-only">Search by airport</label>
           <input
             class="w-full border-none outline-none placeholder:text-gray-400"
@@ -95,22 +95,22 @@ defmodule LiveviewWeb.FlightsLive do
           />
           <div
             :if={length(@airports) > 0 and not @loading_flights}
-            class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10"
+            class="absolute top-full right-0 left-0 z-10 mt-1 max-h-60 overflow-y-auto rounded-lg border border-gray-300 bg-white shadow-lg"
           >
             <div
               :for={{airport_code, airport_name} <- @airports}
-              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              class="cursor-pointer px-4 py-2 hover:bg-gray-100"
               phx-click="select_airport"
               phx-value-code={airport_code}
             >
-              <div class="text-sm text-indigo-700 font-medium">{airport_code}</div>
+              <div class="text-sm font-medium text-indigo-700">{airport_code}</div>
               <div class="text-xs text-zinc-600">{airport_name}</div>
             </div>
           </div>
           <button
             type="submit"
             disabled={@loading_flights}
-            class="shrink-0 rounded-r-lg cursor-pointer size-8"
+            class="size-8 shrink-0 cursor-pointer rounded-r-lg"
           >
             <span :if={not @loading_airports}>🔍</span>
             <.loader :if={@loading_airports} />
@@ -122,24 +122,24 @@ defmodule LiveviewWeb.FlightsLive do
         :if={length(@flights) > 0 || @loading_flights}
         phx-remove={JS.transition({"ease-out duration-300", "opacity-100", "opacity-0"})}
         phx-mounted={JS.transition({"ease-out duration-300", "opacity-0", "opacity-100"})}
-        class="rounded bg-white overflow-hidden border border-zinc-300 shadow-lg divide-y divide-zinc-300 relative min-h-22"
+        class="min-h-22 relative divide-y divide-zinc-300 overflow-hidden rounded border border-zinc-300 bg-white shadow-lg"
       >
         <li
           :if={@loading_flights}
-          class="grid place-content-center py-4 px-6 inset-0 bg-white/80 absolute"
+          class="bg-white/80 absolute inset-0 grid place-content-center px-6 py-4"
         >
           <.loader class="size-16" />
         </li>
         <li
           :for={flight <- @flights}
-          class="grid grid-cols-2 items-center grid-rows-2 py-4 px-6 hover:bg-indigo-100 gap-2"
+          class="grid grid-cols-2 grid-rows-2 items-center gap-2 px-6 py-4 hover:bg-indigo-100"
         >
-          <span class="text-indigo-700 font-bold">Flight #{flight.number}</span>
-          <span class="text-indigo-700 font-medium text-right">
+          <span class="font-bold text-indigo-700">Flight #{flight.number}</span>
+          <span class="text-right font-medium text-indigo-700">
             {flight.origin} to {flight.destination}
           </span>
           <span class="text-sm text-zinc-500">Departs: {flight.departure_time}</span>
-          <span class="text-sm text-zinc-500 text-right">Arrives: {flight.arrival_time}</span>
+          <span class="text-right text-sm text-zinc-500">Arrives: {flight.arrival_time}</span>
         </li>
       </ul>
     </div>

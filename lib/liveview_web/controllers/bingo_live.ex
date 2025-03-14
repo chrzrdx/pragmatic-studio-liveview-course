@@ -23,11 +23,11 @@ defmodule LiveviewWeb.BingoLive do
     ~H"""
     <div class="space-y-8">
       <h1 class="text-5xl font-bold">Bingo Boss 📢</h1>
-      <div class="text-7xl text-indigo-700 font-extrabold">
+      <div class="text-7xl font-extrabold text-indigo-700">
         <span :if={@number}>{@number}</span>
         <span :if={!@number}>&hellip;</span>
       </div>
-      <ul class="grid grid-cols-15 gap-4">
+      <ul class="grid grid-cols-3 gap-4 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-12 xl:grid-cols-15">
         <li :for={number <- @numbers}>{number}</li>
       </ul>
     </div>

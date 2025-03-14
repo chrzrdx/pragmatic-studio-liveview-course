@@ -29,21 +29,21 @@ defmodule LiveviewWeb.SalesLive do
   def render(assigns) do
     ~H"""
     <div class="space-y-12">
-      <h1 class="text-5xl font-extrabold text-center">Snappy Sales 📊</h1>
-      <ul class="border border-zinc-300 bg-white p-10 shadow-lg rounded-xl flex gap-16 justify-around items-center">
-        <li class="flex-1">
+      <h1 class="text-center text-5xl font-extrabold">Snappy Sales 📊</h1>
+      <ul class="flex flex-wrap items-center justify-around gap-16 rounded-xl border border-zinc-300 bg-white p-10 shadow-lg">
+        <li class="min-w-content">
           <.stat value={@new_orders} label="New Orders" />
         </li>
-        <li class="flex-1">
+        <li class="min-w-content">
           <.stat value={@sales_amount} label="Sales Amount" />
         </li>
-        <li class="flex-1">
+        <li class="min-w-content">
           <.stat value={@satisfaction} label="Satisfaction" />
         </li>
       </ul>
       <button
         phx-click="refresh"
-        class="cursor-pointer hover:bg-indigo-100 transition-colors duration-100 bg-indigo-50 text-lg font-medium shadow-sm border border-indigo-300 text-indigo-800 px-5 py-3 rounded-md"
+        class="cursor-pointer rounded-md border border-indigo-300 bg-indigo-50 px-5 py-3 text-lg font-medium text-indigo-800 shadow-sm transition-colors duration-100 hover:bg-indigo-100"
       >
         🔄 Refresh
       </button>
@@ -57,7 +57,7 @@ defmodule LiveviewWeb.SalesLive do
   defp stat(assigns) do
     ~H"""
     <div class="flex flex-col items-center gap-3">
-      <span class="text-indigo-700 text-7xl font-extrabold">{@value}</span>
+      <span class="text-7xl font-extrabold text-indigo-700">{@value}</span>
       <span class="text-2xl font-medium text-zinc-600">{@label}</span>
     </div>
     """

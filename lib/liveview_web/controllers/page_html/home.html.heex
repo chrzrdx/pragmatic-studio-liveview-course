@@ -46,27 +46,27 @@
         v{Application.spec(:phoenix, :vsn)}
       </small>
     </h1>
-    <p class="text-[2rem] mt-4 font-semibold leading-10 tracking-tighter text-zinc-900 text-balance">
+    <p class="text-[2rem] text-balance mt-4 font-semibold leading-10 tracking-tighter text-zinc-900">
       Phoenix LiveView experiments
     </p>
     <p class="mt-4 text-base leading-7 text-zinc-600">
       Based on the Pragmatic Studio course.
     </p>
-    <ul class="mt-6 space-y-2 text-sm grid grid-cols-[6ch_auto_auto] justify-start gap-2">
+    <ul class="grid-cols-[6ch_auto_auto] mt-6 grid justify-start gap-2 space-y-2 text-sm">
       <li
         :for={route <- Phoenix.Router.routes(LiveviewWeb.Router)}
         :if={not String.starts_with?(route.path, "/dev") and route.path != "/"}
         class="contents"
       >
-        <span class="font-mono text-xs px-2 py-1 rounded bg-brand/10 text-brand">
+        <span class="font-mono bg-brand/10 text-brand rounded px-2 py-1 text-xs">
           {route.verb}
         </span>
         <a href={route.path}>
-          <span class="font-medium hover:underline hover:text-indigo-500 mr-2">{route.path}</span>
+          <span class="mr-2 font-medium hover:text-indigo-500 hover:underline">{route.path}</span>
         </a>
         <ul class="inline-flex gap-2">
           <li :for={tag <- route.metadata[:tags]}>
-            <span class="text-[0.7em] px-1 py-0.5 rounded bg-gray-200 text-gray-700">
+            <span class="text-[0.7em] rounded bg-gray-200 px-1 py-0.5 text-gray-700">
               {tag}
             </span>
           </li>
