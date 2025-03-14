@@ -6,7 +6,7 @@ defmodule LiveviewWeb.BoatsLive do
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
-       boats: Boats.filter_boats([], []),
+       boats: Boats.list_boats(),
        tags: Boats.list_tags(),
        prices: Boats.list_prices(),
        selected_prices: [],
@@ -16,9 +16,10 @@ defmodule LiveviewWeb.BoatsLive do
 
   def handle_event("filter_boats", params, socket) do
     tag = Map.get(params, "selected_tag", "")
+    tags = if tag == "", do: [], else: [tag]
     prices = Map.get(params, "selected_prices", [])
 
-    boats = Boats.filter_boats(prices, if(tag == "", do: [], else: [tag]))
+    boats = Boats.list_boats(%{prices: prices, tags: tags})
 
     {:noreply,
      assign(
@@ -50,8 +51,8 @@ defmodule LiveviewWeb.BoatsLive do
 
   def filter_by_tag(assigns) do
     ~H"""
-    <div class="rounded-lg border-2 border-zinc-300 px-4 py-2">
-      <select name="selected_tag" class="w-full">
+    <div class="rounded-lg border-2 border-zinc-300 px-4 py-2 focus-within:border-transparent focus-within:ring-2 focus-within:ring-indigo-500">
+      <select name="selected_tag" class="w-full outline-none">
         <option selected={@selected_tag == ""} value="">All</option>
         <option :for={tag <- @tags} selected={@selected_tag == tag} value={tag}>
           {tag}

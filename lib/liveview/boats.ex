@@ -18,7 +18,16 @@ defmodule Liveview.Boats do
 
   """
   def list_boats do
-    Repo.all(Boat)
+    list_boats(%{prices: [], tags: []})
+  end
+
+  def list_boats(%{prices: prices, tags: tags}) when is_list(prices) and is_list(tags) do
+    Boat
+    |> filter_by_price(prices)
+    |> filter_by_tag(tags)
+    |> order_by(:price)
+    |> select([:id, :name, :price, :image, :tags])
+    |> Repo.all()
   end
 
   def list_tags do
@@ -30,25 +39,17 @@ defmodule Liveview.Boats do
     |> Enum.sort_by(&String.length/1)
   end
 
-  def filter_by_price(query, prices) when length(prices) > 0 do
+  def filter_by_price(query, prices) when is_list(prices) and length(prices) > 0 do
     from boat in query, where: boat.price in ^prices
   end
 
   def filter_by_price(query, _), do: query
 
-  def filter_by_tag(query, tags) when length(tags) > 0 do
+  def filter_by_tag(query, tags) when is_list(tags) and length(tags) > 0 do
     from boat in query, where: fragment("? && ?", boat.tags, ^tags)
   end
 
   def filter_by_tag(query, _), do: query
-
-  def filter_boats(prices, tags) do
-    Boat
-    |> filter_by_price(prices)
-    |> filter_by_tag(tags)
-    |> order_by(:price)
-    |> Repo.all()
-  end
 
   @doc """
   Gets a single boat.
