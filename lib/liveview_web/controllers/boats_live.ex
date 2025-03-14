@@ -4,30 +4,33 @@ defmodule LiveviewWeb.BoatsLive do
   alias Liveview.Boats.Boat
 
   def mount(_params, _session, socket) do
-    {:ok,
-     assign(socket,
-       boats: Boats.list_boats(),
-       tags: Boats.list_tags(),
-       prices: Boats.list_prices(),
-       selected_prices: [],
-       selected_tag: ""
-     )}
+    boats = Boats.list_boats()
+
+    {
+      :ok,
+      socket
+      |> assign(
+        all_tags: Boats.list_tags(),
+        all_prices: Boats.list_prices(),
+        filters: %{tag: "", prices: []}
+      )
+      |> stream(:boats, boats)
+    }
   end
 
   def handle_event("filter_boats", params, socket) do
-    tag = Map.get(params, "selected_tag", "")
+    tag = Map.get(params, "tag", "")
     tags = if tag == "", do: [], else: [tag]
-    prices = Map.get(params, "selected_prices", [])
+    prices = Map.get(params, "prices", [])
 
-    boats = Boats.list_boats(%{prices: prices, tags: tags})
+    boats = Boats.list_boats(%{tags: tags, prices: prices})
 
-    {:noreply,
-     assign(
-       socket,
-       selected_prices: prices,
-       selected_tag: tag,
-       boats: boats
-     )}
+    {
+      :noreply,
+      socket
+      |> assign(filters: %{tag: tag, prices: prices})
+      |> stream(:boats, boats, reset: true)
+    }
   end
 
   def render(assigns) do
@@ -36,13 +39,16 @@ defmodule LiveviewWeb.BoatsLive do
       <h1 class="text-center text-5xl font-extrabold">Daily Boat Rentals</h1>
 
       <form phx-change="filter_boats" class="flex flex-col justify-between gap-4 sm:flex-row">
-        <.filter_by_tag tags={@tags} selected_tag={@selected_tag} />
-        <.filter_by_price prices={@prices} selected_prices={@selected_prices} />
+        <.filter_by_tag tags={@all_tags} selected_tag={@filters.tag} />
+        <.filter_by_price prices={@all_prices} selected_prices={@filters.prices} />
       </form>
 
-      <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <li :for={boat <- @boats}>
+      <ul id="boats" phx-update="stream" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <li :for={{dom_id, boat} <- @streams.boats} id={dom_id}>
           <.boat boat={boat} />
+        </li>
+        <li id="empty-boats" class="hidden first-of-type:block col-span-full text-center py-8">
+          <p class="text-xl text-zinc-700">No boats match your filters</p>
         </li>
       </ul>
     </div>
@@ -52,7 +58,7 @@ defmodule LiveviewWeb.BoatsLive do
   def filter_by_tag(assigns) do
     ~H"""
     <div class="rounded-lg border-2 border-zinc-300 px-4 py-2 focus-within:border-transparent focus-within:ring-2 focus-within:ring-indigo-500">
-      <select name="selected_tag" class="w-full outline-none">
+      <select name="tag" class="w-full outline-none">
         <option selected={@selected_tag == ""} value="">All</option>
         <option :for={tag <- @tags} selected={@selected_tag == tag} value={tag}>
           {tag}
@@ -68,7 +74,7 @@ defmodule LiveviewWeb.BoatsLive do
       <div :for={price <- @prices} class="relative">
         <input
           type="checkbox"
-          name="selected_prices[]"
+          name="prices[]"
           value={price}
           id={"price-#{price}"}
           class="peer absolute h-0 w-0 opacity-0"

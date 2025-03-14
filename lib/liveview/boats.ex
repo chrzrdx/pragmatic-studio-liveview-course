@@ -25,7 +25,7 @@ defmodule Liveview.Boats do
     Boat
     |> filter_by_price(prices)
     |> filter_by_tag(tags)
-    |> order_by(:price)
+    |> order_by([:price, :name])
     |> select([:id, :name, :price, :image, :tags])
     |> Repo.all()
   end
