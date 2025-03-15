@@ -11,9 +11,9 @@ defmodule Liveview.BoatsFixtures do
     {:ok, boat} =
       attrs
       |> Enum.into(%{
-        image: "some image",
+        image: "https://placehold.co/600x400/E6F7FF/31343C.svg?font=playfair-display&text=Boat+1",
         name: "some name",
-        price: "some price",
+        price: "$$",
         tags: ["option1", "option2"]
       })
       |> Liveview.Boats.create_boat()

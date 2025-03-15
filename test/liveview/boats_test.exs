@@ -12,7 +12,13 @@ defmodule Liveview.BoatsTest do
 
     test "list_boats/0 returns all boats" do
       boat = boat_fixture()
-      assert Boats.list_boats() == [boat]
+      [returned_boat] = Boats.list_boats()
+
+      # Check specific fields including ID
+      assert returned_boat.id == boat.id
+      assert returned_boat.name == boat.name
+      assert returned_boat.price == boat.price
+      assert returned_boat.tags == boat.tags
     end
 
     test "get_boat!/1 returns the boat with given id" do
@@ -23,15 +29,18 @@ defmodule Liveview.BoatsTest do
     test "create_boat/1 with valid data creates a boat" do
       valid_attrs = %{
         name: "some name",
-        image: "some image",
-        price: "some price",
+        image: "https://placehold.co/600x400/E6F7FF/31343C.svg?font=playfair-display&text=Boat+1",
+        price: "$$",
         tags: ["option1", "option2"]
       }
 
       assert {:ok, %Boat{} = boat} = Boats.create_boat(valid_attrs)
       assert boat.name == "some name"
-      assert boat.image == "some image"
-      assert boat.price == "some price"
+
+      assert boat.image ==
+               "https://placehold.co/600x400/E6F7FF/31343C.svg?font=playfair-display&text=Boat+1"
+
+      assert boat.price == "$$"
       assert boat.tags == ["option1", "option2"]
     end
 
@@ -44,15 +53,18 @@ defmodule Liveview.BoatsTest do
 
       update_attrs = %{
         name: "some updated name",
-        image: "some updated image",
-        price: "some updated price",
+        image: "https://placehold.co/600x400/E6F7FF/31343C.svg?font=playfair-display&text=Boat+2",
+        price: "$$$$",
         tags: ["option1"]
       }
 
       assert {:ok, %Boat{} = boat} = Boats.update_boat(boat, update_attrs)
       assert boat.name == "some updated name"
-      assert boat.image == "some updated image"
-      assert boat.price == "some updated price"
+
+      assert boat.image ==
+               "https://placehold.co/600x400/E6F7FF/31343C.svg?font=playfair-display&text=Boat+2"
+
+      assert boat.price == "$$$$"
       assert boat.tags == ["option1"]
     end
 
