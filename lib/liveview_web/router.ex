@@ -45,7 +45,10 @@ defmodule LiveviewWeb.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: LiveviewWeb.Telemetry
+      live_dashboard "/dashboard",
+        metrics: LiveviewWeb.Telemetry,
+        ecto_repos: [Liveview.Repo]
+
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

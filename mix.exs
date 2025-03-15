@@ -19,7 +19,7 @@ defmodule Liveview.MixProject do
   def application do
     [
       mod: {Liveview.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -60,7 +60,8 @@ defmodule Liveview.MixProject do
       {:bandit, "~> 1.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:money, "~> 1.13"},
-      {:tailwind_formatter, "~> 0.4.2", only: [:dev, :test], runtime: false}
+      {:tailwind_formatter, "~> 0.4.2", only: [:dev, :test], runtime: false},
+      {:ecto_psql_extras, "~> 0.6"}
     ]
   end
 
