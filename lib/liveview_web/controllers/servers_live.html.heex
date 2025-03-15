@@ -1,0 +1,56 @@
+<div class="grid gap-12">
+  <h1 class="text-center text-5xl font-extrabold">Servers 🖥️</h1>
+  <div class="grid-cols-[15rem_1fr] min-h-80 grid overflow-clip rounded-lg shadow">
+    <nav class="bg-indigo-700 px-2 py-4 font-bold text-white">
+      <ul class="space-y-2" phx-update="stream" id="servers">
+        <li :for={{id, server} <- @streams.servers} id={id}>
+          <.link
+            patch={~p"/servers?id=#{server.id}"}
+            class="flex items-center gap-2 rounded-lg px-2 py-3 hover:bg-indigo-500"
+          >
+            <span class={[
+              "size-4 rounded-full",
+              if(server.status == "down", do: "bg-red-400", else: "bg-green-400")
+            ]} />
+            <span>{server.name}</span>
+          </.link>
+        </li>
+      </ul>
+    </nav>
+    <div class="bg-white">
+      <div class="flex items-center justify-between p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-indigo-800">{@selected_server.name}</h2>
+        <span class={[
+          "inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-bold",
+          if(@selected_server.status == "down",
+            do: "bg-red-300 text-red-800",
+            else: "bg-green-300 text-green-800"
+          )
+        ]}>
+          {@selected_server.status}
+        </span>
+      </div>
+      <div class="space-y-8 p-6">
+        <p class="grid grid-cols-3 gap-2 text-lg font-medium text-zinc-600">
+          <span>{@selected_server.deploys} deploys</span>
+          <span class="text-center">
+            {format_size(@selected_server.size)}
+          </span>
+          <span class="text-right">{@selected_server.stack}</span>
+        </p>
+        <div class="space-y-2">
+          <h3 class="font-medium">Last commit message:</h3>
+          <p>{@selected_server.last_commit}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="-mt-8">
+    <button
+      class="cursor-pointer px-4 py-2 text-xl font-bold text-indigo-800"
+      phx-click="add_coffee"
+    >
+      <span class="text-4xl">☕</span> {@coffees}
+    </button>
+  </div>
+</div>
