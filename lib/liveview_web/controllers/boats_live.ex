@@ -47,7 +47,7 @@ defmodule LiveviewWeb.BoatsLive do
         <li :for={{dom_id, boat} <- @streams.boats} id={dom_id}>
           <.boat boat={boat} />
         </li>
-        <li id="empty-boats" class="hidden first-of-type:block col-span-full text-center py-8">
+        <li id="empty-boats" class="col-span-full hidden py-8 text-center first-of-type:block">
           <p class="text-xl text-zinc-700">No boats match your filters</p>
         </li>
       </ul>
