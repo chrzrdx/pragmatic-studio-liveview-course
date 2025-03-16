@@ -5,17 +5,41 @@
     <table class="min-w-full divide-y divide-gray-300">
       <thead>
         <tr class="bg-indigo-700 text-sm font-semibold uppercase text-white">
-          <th scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
+          <th width="10%" scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
           <th scope="col" class="px-3 py-3.5 text-left">
-            <span class="group inline-flex cursor-pointer">Item <.sort_icon /></span>
+            <.link
+              patch={
+                ~p"/donations?#{%{@params | sort_by: "name", sort_direction: get_next_sort_order(@params.sort_direction)}}"
+              }
+              data-sort-direction={@params.sort_by == "name" && @params.sort_direction}
+              class="group inline-flex cursor-pointer"
+            >
+              Item <.sort_icon />
+            </.link>
           </th>
-          <th scope="col" class="px-3 py-3.5 text-center">
-            <span class="group inline-flex cursor-pointer">Quantity <.sort_icon /></span>
+          <th scope="col" class="px-3 py-3.5 text-center" width="10%">
+            <.link
+              patch={
+                ~p"/donations?#{%{@params | sort_by: "quantity", sort_direction: get_next_sort_order(@params.sort_direction)}}"
+              }
+              data-sort-direction={@params.sort_by == "quantity" && @params.sort_direction}
+              class="group inline-flex cursor-pointer"
+            >
+              Quantity <.sort_icon />
+            </.link>
           </th>
-          <th scope="col" class="px-3 py-3.5 text-center">
-            <span class="group inline-flex cursor-pointer">
+          <th scope="col" class="px-3 py-3.5 text-center" width="25%">
+            <.link
+              patch={
+                ~p"/donations?#{%{@params | sort_by: "days_until_expires", sort_direction: get_next_sort_order(@params.sort_direction)}}"
+              }
+              data-sort-direction={
+                @params.sort_by == "days_until_expires" && @params.sort_direction
+              }
+              class="group inline-flex cursor-pointer items-center"
+            >
               Days until expires <.sort_icon />
-            </span>
+            </.link>
           </th>
         </tr>
       </thead>
