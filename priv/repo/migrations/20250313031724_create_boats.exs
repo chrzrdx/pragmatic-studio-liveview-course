@@ -2,8 +2,7 @@ defmodule Liveview.Repo.Migrations.CreateBoats do
   use Ecto.Migration
 
   def change do
-    create table(:boats, primary_key: false) do
-      add :id, :binary_id, primary_key: true
+    create table(:boats) do
       add :name, :text, null: false, unique: true
       add :image, :text, null: false
       add :price, :text, null: false

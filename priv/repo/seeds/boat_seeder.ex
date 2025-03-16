@@ -1,4 +1,4 @@
-defmodule Liveview.Seeds.BoatSeeder do
+defmodule Liveview.Repo.Seeds.BoatSeeder do
   alias Liveview.Repo
   alias Liveview.Boats.Boat
   alias Liveview.Seeds.Utils
@@ -25,21 +25,21 @@ defmodule Liveview.Seeds.BoatSeeder do
   def run do
     Repo.delete_all(Boat)
 
+    now = DateTime.utc_now(:second)
+
     boats =
       Enum.map(@boat_names, fn name ->
         %{
           name: name,
           image: Utils.create_image_url(name),
           tags: random_tags(),
-          price: random_price()
+          price: random_price(),
+          inserted_at: now,
+          updated_at: now
         }
       end)
 
-    Enum.each(boats, fn boat_data ->
-      %Boat{}
-      |> Boat.changeset(boat_data)
-      |> Repo.insert!()
-    end)
+    Repo.insert_all(Boat, boats)
 
     IO.puts("Seeded #{length(boats)} boats")
   end

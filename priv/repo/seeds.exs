@@ -14,7 +14,7 @@ Code.require_file("seeds/utils.ex", __DIR__)
 Code.require_file("seeds/boat_seeder.ex", __DIR__)
 Code.require_file("seeds/server_seeder.ex", __DIR__)
 
-alias Liveview.Seeds.{BoatSeeder, ServerSeeder}
+alias Liveview.Repo.Seeds.{BoatSeeder, ServerSeeder}
 
 # Run all seeders
 BoatSeeder.run()

@@ -1,4 +1,4 @@
-defmodule Liveview.Seeds.ServerSeeder do
+defmodule Liveview.Repo.Seeds.ServerSeeder do
   alias Liveview.Repo
   alias Liveview.Servers.Server
 
@@ -48,12 +48,17 @@ defmodule Liveview.Seeds.ServerSeeder do
   def run do
     Repo.delete_all(Server)
 
-    Enum.each(@servers, fn server_data ->
-      %Server{}
-      |> Server.changeset(server_data)
-      |> Repo.insert!()
-    end)
+    now = DateTime.utc_now(:second)
 
-    IO.puts("Seeded #{length(@servers)} servers")
+    servers =
+      Enum.map(@servers, fn server_data ->
+        server_data
+        |> Map.put(:inserted_at, now)
+        |> Map.put(:updated_at, now)
+      end)
+
+    Repo.insert_all(Server, servers)
+
+    IO.puts("Seeded #{length(servers)} servers")
   end
 end
