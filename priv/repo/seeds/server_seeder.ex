@@ -7,23 +7,23 @@ defmodule Liveview.Seeds.ServerSeeder do
       name: "swift-falcon",
       status: "up",
       deploys: 5,
-      size: 147_456, # ~147MB
+      size: 147_456,
       stack: "Elixir/Phoenix",
       last_commit: "Add user authentication and OAuth support"
     },
     %{
       name: "silent-bear",
-      status: "up",
+      status: "down",
       deploys: 3,
-      size: 98_304, # ~98MB
+      size: 96_304,
       stack: "Python/Flask",
       last_commit: "Fix memory leak in WebSocket connection"
     },
     %{
       name: "mighty-whale",
-      status: "down",
+      status: "up",
       deploys: 10,
-      size: 245_760, # ~245MB
+      size: 248_760,
       stack: "Node/React",
       last_commit: "Update dependencies and fix security vulnerabilities"
     },
@@ -31,15 +31,15 @@ defmodule Liveview.Seeds.ServerSeeder do
       name: "clever-fox",
       status: "up",
       deploys: 2,
-      size: 184_320, # ~184MB
+      size: 181_320,
       stack: "Elixir/Phoenix",
       last_commit: "Implement real-time dashboard features"
     },
     %{
       name: "fierce-tiger",
-      status: "down",
+      status: "up",
       deploys: 8,
-      size: 122_880, # ~122MB
+      size: 123_280,
       stack: "Next.js",
       last_commit: "Optimize Docker build and reduce image size"
     }

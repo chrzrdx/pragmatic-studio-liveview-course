@@ -5,32 +5,18 @@ defmodule LiveviewWeb.ServersLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, coffees: 0)}
+    servers = Servers.list_servers()
+    {:ok, assign(socket, coffees: 0, servers: servers)}
   end
 
   @impl true
   def handle_params(%{"id" => id}, _uri, socket) do
-    servers = Servers.list_servers()
     selected_server = Servers.get_server!(String.to_integer(id))
-
-    socket =
-      socket
-      |> assign(selected_server: selected_server)
-      |> stream(:servers, servers)
-
-    {:noreply, socket}
+    {:noreply, assign(socket, selected_server: selected_server)}
   end
 
   def handle_params(_, _uri, socket) do
-    servers = Servers.list_servers()
-    selected_server = hd(servers)
-
-    socket =
-      socket
-      |> assign(selected_server: selected_server)
-      |> stream(:servers, servers)
-
-    {:noreply, socket}
+    {:noreply, assign(socket, selected_server: hd(socket.assigns.servers))}
   end
 
   @impl true

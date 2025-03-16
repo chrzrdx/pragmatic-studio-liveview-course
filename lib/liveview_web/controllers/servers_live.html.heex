@@ -1,12 +1,15 @@
 <div class="grid gap-12">
   <h1 class="text-center text-5xl font-extrabold">Servers 🖥️</h1>
   <div class="grid-cols-[15rem_1fr] min-h-80 grid overflow-clip rounded-lg shadow">
-    <nav class="bg-indigo-700 px-2 py-4 font-bold text-white">
-      <ul class="space-y-2" phx-update="stream" id="servers">
-        <li :for={{id, server} <- @streams.servers} id={id}>
+    <nav class="border border-indigo-700 bg-indigo-700 px-2 py-4 font-bold text-white">
+      <ul class="space-y-2" id="servers">
+        <li :for={server <- @servers}>
           <.link
             patch={~p"/servers?id=#{server.id}"}
-            class="flex items-center gap-2 rounded-lg px-2 py-3 hover:bg-indigo-500"
+            class={[
+              "flex items-center gap-2 rounded-lg px-2 py-3 hover:bg-indigo-500",
+              if(@selected_server.id == server.id, do: "bg-indigo-500", else: "bg-transparent")
+            ]}
           >
             <span class={[
               "size-4 rounded-full",
@@ -17,7 +20,7 @@
         </li>
       </ul>
     </nav>
-    <div class="bg-white">
+    <div class="border border-gray-200 bg-white">
       <div class="flex items-center justify-between p-6 shadow-sm">
         <h2 class="text-xl font-bold text-indigo-800">{@selected_server.name}</h2>
         <span class={[
@@ -47,7 +50,7 @@
   </div>
   <div class="-mt-8">
     <button
-      class="cursor-pointer px-4 py-2 text-xl font-bold text-indigo-800"
+      class="flex cursor-pointer items-center gap-2 px-4 py-2 text-xl font-bold text-indigo-800"
       phx-click="add_coffee"
     >
       <span class="text-4xl">☕</span> {@coffees}
