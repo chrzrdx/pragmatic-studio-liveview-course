@@ -17,16 +17,26 @@ defmodule Liveview.Donations do
       field :sort_by, :string, default: "id"
       field :sort_direction, :string, default: "asc"
       field :page, :integer, default: 1
-      field :max_per_page, :integer, default: 10
+      field :per_page, :integer, default: 10
     end
 
     def changeset(params) do
       %__MODULE__{}
-      |> cast(params, [:sort_by, :sort_direction, :page, :max_per_page])
+      |> cast(params, [:sort_by, :sort_direction, :page, :per_page])
       |> validate_inclusion(:sort_by, ~w(id name quantity days_until_expires))
       |> validate_inclusion(:sort_direction, ~w(asc desc))
       |> validate_number(:page, greater_than: 0)
-      |> validate_number(:max_per_page, greater_than: 0, less_than_or_equal_to: 100)
+      |> validate_number(:per_page, greater_than: 0, less_than_or_equal_to: 100)
+    end
+
+    def validate(params) do
+      case apply_action(changeset(params), :validate) do
+        {:ok, params} ->
+          params |> Map.from_struct()
+
+        {:error, _changeset} ->
+          %ListParams{} |> Map.from_struct()
+      end
     end
   end
 
@@ -40,7 +50,7 @@ defmodule Liveview.Donations do
 
   """
   def list_donations(params \\ %{}) when is_map(params) do
-    params = validate_list_params(params)
+    params = ListParams.validate(params)
 
     Donation
     |> sort(params)
@@ -48,28 +58,18 @@ defmodule Liveview.Donations do
     |> Repo.all()
   end
 
-  def validate_list_params(params) do
-    case apply_action(ListParams.changeset(params), :validate) do
-      {:ok, params} ->
-        params |> Map.from_struct()
-
-      {:error, _changeset} ->
-        %ListParams{} |> Map.from_struct()
-    end
-  end
-
   defp sort(query, %{sort_by: sort_by, sort_direction: sort_direction}) do
     sort_direction = String.to_atom(sort_direction)
     sort_by = String.to_atom(sort_by)
 
     query
-    |> order_by([{^sort_direction, ^sort_by}])
+    |> order_by([{^sort_direction, ^sort_by}, asc: :id])
   end
 
-  defp paginate(query, %{page: page, max_per_page: max_per_page}) do
+  defp paginate(query, %{page: page, per_page: per_page}) do
     query
-    |> limit(^max_per_page)
-    |> offset(^((page - 1) * max_per_page))
+    |> limit(^per_page)
+    |> offset(^((page - 1) * per_page))
   end
 
   @doc """

@@ -1,69 +1,95 @@
 <div class="grid gap-12">
   <h1 class="text-center text-5xl font-extrabold">Food Bank Donations</h1>
 
-  <div class="overflow-clip rounded-lg border border-zinc-300">
-    <table class="min-w-full divide-y divide-gray-300">
-      <thead>
-        <tr class="bg-indigo-700 text-sm font-semibold uppercase text-white">
-          <th width="10%" scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
-          <th scope="col" class="px-3 py-3.5 text-left">
-            <.link
-              patch={
-                ~p"/donations?#{%{@params | sort_by: "name", sort_direction: get_next_sort_order(@params.sort_direction)}}"
-              }
-              data-sort-direction={@params.sort_by == "name" && @params.sort_direction}
-              class="group inline-flex cursor-pointer"
-            >
-              Item <.sort_icon />
-            </.link>
-          </th>
-          <th scope="col" class="px-3 py-3.5 text-center" width="10%">
-            <.link
-              patch={
-                ~p"/donations?#{%{@params | sort_by: "quantity", sort_direction: get_next_sort_order(@params.sort_direction)}}"
-              }
-              data-sort-direction={@params.sort_by == "quantity" && @params.sort_direction}
-              class="group inline-flex cursor-pointer"
-            >
-              Quantity <.sort_icon />
-            </.link>
-          </th>
-          <th scope="col" class="px-3 py-3.5 text-center" width="25%">
-            <.link
-              patch={
-                ~p"/donations?#{%{@params | sort_by: "days_until_expires", sort_direction: get_next_sort_order(@params.sort_direction)}}"
-              }
-              data-sort-direction={
-                @params.sort_by == "days_until_expires" && @params.sort_direction
-              }
-              class="group inline-flex cursor-pointer items-center"
-            >
-              Days until expires <.sort_icon />
-            </.link>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200 bg-white">
-        <tr :for={donation <- @donations} class="whitespace-nowrap text-zinc-700">
-          <td class="px-3 py-4 text-right text-zinc-500">
-            {donation.id}
-          </td>
-          <td class="px-3 py-4 text-left">
-            {donation.emoji} {donation.name}
-          </td>
-          <td class="px-3 py-4 text-center">
-            {donation.quantity} lbs
-          </td>
-          <td class="px-3 py-4 text-center">
-            <span
-              data-expiring={donation.days_until_expires < 10}
-              class="rounded px-2 py-1 data-expiring:bg-red-300 data-expiring:text-red-950"
-            >
-              {donation.days_until_expires}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="flex flex-col gap-4">
+    <div class="overflow-clip rounded-lg border border-zinc-300">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr class="bg-indigo-700 text-sm font-semibold uppercase text-white">
+            <th width="10%" scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
+            <th scope="col" class="px-3 py-3.5 text-left">
+              <.link
+                patch={get_sort_link(@params, "name")}
+                data-sort-direction={@params.sort_by == "name" && @params.sort_direction}
+                class="group inline-flex cursor-pointer"
+              >
+                Item <.sort_icon />
+              </.link>
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-center" width="10%">
+              <.link
+                patch={get_sort_link(@params, "quantity")}
+                data-sort-direction={@params.sort_by == "quantity" && @params.sort_direction}
+                class="group inline-flex cursor-pointer"
+              >
+                Quantity <.sort_icon />
+              </.link>
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-center" width="25%">
+              <.link
+                patch={get_sort_link(@params, "days_until_expires")}
+                data-sort-direction={
+                  @params.sort_by == "days_until_expires" && @params.sort_direction
+                }
+                class="group inline-flex cursor-pointer items-center"
+              >
+                Days until expires <.sort_icon />
+              </.link>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white" id="donations" phx-update="stream">
+          <tr
+            :for={{id, donation} <- @streams.donations}
+            class="whitespace-nowrap text-zinc-700"
+            id={id}
+          >
+            <td class="px-3 py-4 text-right text-zinc-500">
+              {donation.id}
+            </td>
+            <td class="px-3 py-4 text-left">
+              {donation.emoji} {donation.name}
+            </td>
+            <td class="px-3 py-4 text-center">
+              {donation.quantity} lbs
+            </td>
+            <td class="px-3 py-4 text-center">
+              <span
+                data-expiring={donation.days_until_expires < 10}
+                class="rounded px-2 py-1 data-expiring:bg-red-300 data-expiring:text-red-950"
+              >
+                {donation.days_until_expires}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <nav class="flex items-center justify-between px-4">
+      <.link
+        patch={get_pagination_link(@params, :previous)}
+        class="inline-flex items-baseline gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+      >
+        <span class="leading-1 text-lg ">‹</span> Previous
+      </.link>
+
+      <form
+        phx-change="update_per_page"
+        class="inline-flex items-baseline gap-1 pr-4 text-sm text-zinc-600"
+      >
+        <select id="per_page" name="per_page" class="rounded border border-zinc-300 px-2 py-1">
+          {Phoenix.HTML.Form.options_for_select([5, 10, 20, 50, 100], @params.per_page)}
+        </select>
+        <label for="per_page">per page</label>
+      </form>
+
+      <.link
+        patch={get_pagination_link(@params, :next)}
+        class="inline-flex items-baseline gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+      >
+        Next <span class="leading-1 text-lg">›</span>
+      </.link>
+    </nav>
   </div>
 </div>

@@ -9,10 +9,19 @@ defmodule LiveviewWeb.DonationsLive do
 
   @impl true
   def handle_params(params, _uri, socket) do
-    params = Donations.validate_list_params(params)
+    params = Donations.ListParams.validate(params)
     donations = Donations.list_donations(params)
 
-    {:noreply, assign(socket, donations: donations, params: params)}
+    {:noreply,
+     socket
+     |> assign(params: params)
+     |> stream(:donations, donations, reset: true)}
+  end
+
+  @impl true
+  def handle_event("update_per_page", %{"per_page" => per_page}, socket) do
+    params = %{socket.assigns.params | per_page: per_page}
+    {:noreply, push_patch(socket, to: ~p"/donations?#{params}")}
   end
 
   defp sort_icon(assigns) do
@@ -22,7 +31,7 @@ defmodule LiveviewWeb.DonationsLive do
       "group-data-sort-direction:visible group-data-sort-direction:bg-indigo-500"
     ]}>
       <svg
-        class="size-5 transition-transform duration-300 ease-in-out group-data-[sort-direction=asc]:rotate-180"
+        class="size-5 transition-transform duration-100 ease-in-out group-data-[sort-direction=asc]:rotate-180"
         viewBox="0 0 20 20"
         fill="currentColor"
         aria-hidden="true"
@@ -38,7 +47,23 @@ defmodule LiveviewWeb.DonationsLive do
     """
   end
 
+  defp get_sort_link(%{sort_by: sort_by} = params, sort_by) do
+    ~p"/donations?#{%{params | sort_direction: get_next_sort_order(params.sort_direction)}}"
+  end
+
+  defp get_sort_link(params, sort_by) do
+    ~p"/donations?#{%{params | sort_by: sort_by, sort_direction: "asc"}}"
+  end
+
   defp get_next_sort_order("asc"), do: "desc"
   defp get_next_sort_order("desc"), do: "asc"
   defp get_next_sort_order(_), do: "asc"
+
+  defp get_pagination_link(%{page: page} = params, :previous) do
+    ~p"/donations?#{%{params | page: max(page - 1, 1)}}"
+  end
+
+  defp get_pagination_link(%{page: page} = params, :next) do
+    ~p"/donations?#{%{params | page: page + 1}}"
+  end
 end
