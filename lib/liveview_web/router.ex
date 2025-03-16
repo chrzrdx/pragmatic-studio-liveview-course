@@ -26,6 +26,7 @@ defmodule LiveviewWeb.Router do
     live "/flights", FlightsLive, metadata: %{tags: ["Search", "Autocomplete"]}
     live "/boats", BoatsLive, metadata: %{tags: ["Filtering", "Function Components"]}
     live "/servers", ServersLive, metadata: %{tags: ["Live Navigation"]}
+    live "/donations", DonationsLive, metadata: %{tags: ["Sorting", "Pagination"]}
   end
 
   # Other scopes may use custom stacks.

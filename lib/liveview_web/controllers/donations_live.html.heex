@@ -1,0 +1,45 @@
+<div class="grid gap-12">
+  <h1 class="text-center text-5xl font-extrabold">Food Bank Donations</h1>
+
+  <div class="overflow-clip rounded-lg border border-zinc-300">
+    <table class="min-w-full divide-y divide-gray-300">
+      <thead>
+        <tr class="bg-indigo-700 text-sm font-semibold uppercase text-white">
+          <th scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
+          <th scope="col" class="px-3 py-3.5 text-left">
+            <span class="group inline-flex cursor-pointer">Item <.sort_icon /></span>
+          </th>
+          <th scope="col" class="px-3 py-3.5 text-center">
+            <span class="group inline-flex cursor-pointer">Quantity <.sort_icon /></span>
+          </th>
+          <th scope="col" class="px-3 py-3.5 text-center">
+            <span class="group inline-flex cursor-pointer">
+              Days until expires <.sort_icon />
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <tr :for={donation <- @donations} class="whitespace-nowrap text-zinc-700">
+          <td class="px-3 py-4 text-right text-zinc-500">
+            {donation.id}
+          </td>
+          <td class="px-3 py-4 text-left">
+            {donation.emoji} {donation.name}
+          </td>
+          <td class="px-3 py-4 text-center">
+            {donation.quantity} lbs
+          </td>
+          <td class="px-3 py-4 text-center">
+            <span
+              data-expiring={donation.days_until_expires < 10}
+              class="rounded px-2 py-1 data-expiring:bg-red-300 data-expiring:text-red-950"
+            >
+              {donation.days_until_expires}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
