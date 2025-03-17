@@ -10,9 +10,11 @@ defmodule LiveviewWeb.DonationsLive do
   @impl true
   def handle_params(params, _uri, socket) do
     params = Donations.ListParams.validate(params)
-    donations = Donations.list_donations(params)
     count_donations = Donations.count_donations()
     max_pages = max(1, ceil(count_donations / params.per_page))
+    params = %{params | page: min(params.page, max_pages)}
+
+    donations = Donations.list_donations(params)
 
     {:noreply,
      socket
