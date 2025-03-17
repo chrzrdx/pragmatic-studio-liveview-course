@@ -6,7 +6,7 @@
       <table class="min-w-full divide-y divide-gray-300">
         <thead>
           <tr class="bg-indigo-700 text-sm font-semibold uppercase text-white">
-            <th width="10%" scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
+            <th width="8%" scope="col" class="py-3.5 pr-3 pl-4 text-right"></th>
             <th scope="col" class="px-3 py-3.5 text-left">
               <.link
                 patch={get_sort_link(@params, "name")}
@@ -66,17 +66,20 @@
       </table>
     </div>
 
-    <nav class="flex items-center justify-between px-4">
-      <.link
-        patch={get_pagination_link(@params, :previous)}
-        class="inline-flex items-baseline gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-      >
-        <span class="leading-1 text-lg ">‹</span> Previous
-      </.link>
+    <nav class="grid-cols-[10ch_1fr_10ch] grid justify-between px-4">
+      <div>
+        <.link
+          :if={@params.page > 1}
+          patch={get_pagination_link(@params, @max_pages, :previous)}
+          class="inline-flex items-baseline gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+        >
+          <span class="leading-1 text-lg ">‹</span> Previous
+        </.link>
+      </div>
 
       <form
         phx-change="update_per_page"
-        class="inline-flex items-baseline gap-1 pr-4 text-sm text-zinc-600"
+        class="mx-auto inline-flex items-baseline gap-1 pr-4 text-sm text-zinc-600"
       >
         <select id="per_page" name="per_page" class="rounded border border-zinc-300 px-2 py-1">
           {Phoenix.HTML.Form.options_for_select([5, 10, 20, 50, 100], @params.per_page)}
@@ -84,12 +87,15 @@
         <label for="per_page">per page</label>
       </form>
 
-      <.link
-        patch={get_pagination_link(@params, :next)}
-        class="inline-flex items-baseline gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
-      >
-        Next <span class="leading-1 text-lg">›</span>
-      </.link>
+      <div class="text-right">
+        <.link
+          :if={@params.page < @max_pages}
+          patch={get_pagination_link(@params, @max_pages, :next)}
+          class="inline-flex items-baseline gap-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+        >
+          Next <span class="leading-1 text-lg">›</span>
+        </.link>
+      </div>
     </nav>
   </div>
 </div>

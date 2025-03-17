@@ -11,10 +11,13 @@ defmodule LiveviewWeb.DonationsLive do
   def handle_params(params, _uri, socket) do
     params = Donations.ListParams.validate(params)
     donations = Donations.list_donations(params)
+    count_donations = Donations.count_donations()
+    max_pages = max(1, ceil(count_donations / params.per_page))
 
     {:noreply,
      socket
      |> assign(params: params)
+     |> assign(:max_pages, max_pages)
      |> stream(:donations, donations, reset: true)}
   end
 
@@ -59,11 +62,11 @@ defmodule LiveviewWeb.DonationsLive do
   defp get_next_sort_order("desc"), do: "asc"
   defp get_next_sort_order(_), do: "asc"
 
-  defp get_pagination_link(%{page: page} = params, :previous) do
-    ~p"/donations?#{%{params | page: max(page - 1, 1)}}"
+  defp get_pagination_link(%{page: page} = params, max_pages, :previous) do
+    ~p"/donations?#{%{params | page: min(max(page - 1, 1), max_pages)}}"
   end
 
-  defp get_pagination_link(%{page: page} = params, :next) do
-    ~p"/donations?#{%{params | page: page + 1}}"
+  defp get_pagination_link(%{page: page} = params, max_pages, :next) do
+    ~p"/donations?#{%{params | page: min(page + 1, max_pages)}}"
   end
 end

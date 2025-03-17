@@ -26,7 +26,7 @@ defmodule Liveview.Donations do
       |> validate_inclusion(:sort_by, ~w(id name quantity days_until_expires))
       |> validate_inclusion(:sort_direction, ~w(asc desc))
       |> validate_number(:page, greater_than: 0)
-      |> validate_number(:per_page, greater_than: 0, less_than_or_equal_to: 100)
+      |> validate_inclusion(:per_page, [5, 10, 20, 50, 100])
     end
 
     def validate(params) do
@@ -71,6 +71,8 @@ defmodule Liveview.Donations do
     |> limit(^per_page)
     |> offset(^((page - 1) * per_page))
   end
+
+  def count_donations, do: Repo.aggregate(Donation, :count)
 
   @doc """
   Gets a single donation.
