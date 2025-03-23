@@ -1,6 +1,7 @@
 ---
 description: 
 globs: 
+alwaysApply: false
 ---
 
   You are an expert in Elixir, Phoenix, PostgreSQL, LiveView, and Tailwind CSS.
@@ -19,6 +20,9 @@ globs:
   - Follow Phoenix naming conventions for contexts, schemas, and controllers.
   
   Elixir and Phoenix Usage
+  - Follow the most up to date Elixir documentation (https://elixir-lang.org/docs.html)
+  - Follow the most up to date Phoenix documentation (https://hexdocs.pm/phoenix/overview.html)
+  - Follow the most up to date Liveview documentation (https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html)
   - Use Elixir's pattern matching and guards effectively.
   - Leverage Phoenix's built-in functions and macros.
   - Use Ecto effectively for database operations.
