@@ -83,9 +83,6 @@ defmodule LiveviewWeb.VolunteersLive do
     """
   end
 
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
   attr :type, :string, default: "text"
   attr :errors, :list, default: []
   attr :autocomplete, :string, default: "off"
@@ -95,18 +92,15 @@ defmodule LiveviewWeb.VolunteersLive do
   def vinput(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
 
-    assigns
-    |> assign(
-      field: nil,
-      id: field.id,
-      errors: Enum.map(errors, &LiveviewWeb.CoreComponents.translate_error(&1)),
-      name: field.name,
-      value: field.value
-    )
-    |> vinput()
-  end
+    assigns =
+      assign(assigns,
+        field: nil,
+        id: field.id,
+        errors: Enum.map(errors, &LiveviewWeb.CoreComponents.translate_error(&1)),
+        name: field.name,
+        value: field.value
+      )
 
-  def vinput(assigns) do
     ~H"""
     <div class="flex flex-1 flex-col gap-1">
       <input
