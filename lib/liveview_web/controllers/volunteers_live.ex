@@ -34,6 +34,18 @@ defmodule LiveviewWeb.VolunteersLive do
     end
   end
 
+  def handle_event("toggle_check_out", %{"value" => id}, socket) do
+    volunteer = Volunteers.get_volunteer!(id)
+
+    case Volunteers.update_volunteer(volunteer, %{checked_out: !volunteer.checked_out}) do
+      {:ok, volunteer} ->
+        {:noreply, socket |> stream_insert(:volunteers, volunteer)}
+
+      {:error, _} ->
+        {:noreply, socket |> put_flash(:error, "Could not check out guest #{volunteer.name}")}
+    end
+  end
+
   defp assign_form(
          socket,
          changeset \\ %Volunteer{} |> Volunteers.change_volunteer(),
@@ -73,9 +85,16 @@ defmodule LiveviewWeb.VolunteersLive do
           <span>{volunteer.phone}</span>
           <button
             type="button"
-            class="cursor-pointer rounded bg-green-600 px-4 py-2 font-bold text-white transition-colors hover:bg-green-700 focus:bg-green-700"
+            class={[
+              "min-w-[12ch] cursor-pointer rounded px-4 py-2 font-bold text-white transition-colors phx-submit-loading:opacity-75",
+              volunteer.checked_out && "bg-amber-700 hover:bg-amber-800 focus:bg-amber-800",
+              !volunteer.checked_out && "bg-green-600 hover:bg-green-700 focus:bg-green-700"
+            ]}
+            phx-click="toggle_check_out"
+            value={volunteer.id}
+            phx-disable-with="..."
           >
-            Check out
+            {if volunteer.checked_out, do: "Check in", else: "Check out"}
           </button>
         </li>
       </ul>
