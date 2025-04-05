@@ -12,8 +12,6 @@ defmodule Liveview.Application do
       Liveview.Repo,
       {DNSCluster, query: Application.get_env(:liveview, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Liveview.PubSub},
-      # Start the Finch HTTP client for sending emails
-      {Finch, name: Liveview.Finch},
       # Start a worker by calling: Liveview.Worker.start_link(arg)
       # {Liveview.Worker, arg},
       # Start to serve requests, typically the last entry

@@ -1,34 +1,9 @@
 /**
  * @license MIT
- * topbar 2.0.0, 2023-02-04
- * https://buunguyen.github.io/topbar
- * Copyright (c) 2021 Buu Nguyen
+ * topbar 3.0.0
+ * http://buunguyen.github.io/topbar
+ * Copyright (c) 2024 Buu Nguyen
  */
-
-const vendors = ["ms", "moz", "webkit", "o"];
-for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-  window.requestAnimationFrame = window[`${vendors[x]}RequestAnimationFrame`];
-  window.cancelAnimationFrame =
-    window[`${vendors[x]}CancelAnimationFrame`] ||
-    window[`${vendors[x]}CancelRequestAnimationFrame`];
-}
-
-if (!window.requestAnimationFrame) {
-  let lastTime = 0;
-  window.requestAnimationFrame = (callback) => {
-    const currTime = new Date().getTime();
-    const timeToCall = Math.max(0, 16 - (currTime - lastTime));
-    const id = setTimeout(() => callback(currTime + timeToCall), timeToCall);
-    lastTime = currTime + timeToCall;
-    return id;
-  };
-}
-
-if (!window.cancelAnimationFrame) {
-  window.cancelAnimationFrame = (id) => {
-    clearTimeout(id);
-  };
-}
 
 let canvas;
 let currentProgress;
@@ -88,18 +63,16 @@ const createCanvas = () => {
   style.zIndex = 100001;
   style.display = "none";
   if (options.className) canvas.classList.add(options.className);
-  document.body.appendChild(canvas);
   addEvent(window, "resize", repaint);
 };
 
 export const topbar = {
-  config(opts) {
-    for (const key in opts) {
-      // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
-      if (options.hasOwnProperty(key)) options[key] = opts[key];
-    }
+  config: (opts) => {
+    for (const key in opts)
+      if (Object.prototype.hasOwnProperty.call(options, key))
+        options[key] = opts[key];
   },
-  show(delay) {
+  show: (delay) => {
     if (showing) return;
     if (delay) {
       if (delayTimerId) return;
@@ -108,6 +81,7 @@ export const topbar = {
       showing = true;
       if (fadeTimerId !== null) window.cancelAnimationFrame(fadeTimerId);
       if (!canvas) createCanvas();
+      if (!canvas.parentElement) document.body.appendChild(canvas);
       canvas.style.opacity = 1;
       canvas.style.display = "block";
       topbar.progress(0);
@@ -119,19 +93,21 @@ export const topbar = {
       }
     }
   },
-  progress(_to) {
-    let to = _to;
+  progress: (to) => {
     if (typeof to === "undefined") return currentProgress;
+    let newProgress;
     if (typeof to === "string") {
-      to =
+      newProgress =
         (to.indexOf("+") >= 0 || to.indexOf("-") >= 0 ? currentProgress : 0) +
         Number.parseFloat(to);
+    } else {
+      newProgress = to;
     }
-    currentProgress = to > 1 ? 1 : to;
+    currentProgress = newProgress > 1 ? 1 : newProgress;
     repaint();
     return currentProgress;
   },
-  hide() {
+  hide: () => {
     clearTimeout(delayTimerId);
     delayTimerId = null;
     if (!showing) return;
